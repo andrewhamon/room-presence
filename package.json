@@ -11,7 +11,11 @@
   "author": "Andrew Hamon",
   "license": "MIT",
   "dependencies": {
-    "bleacon": "^0.5.1"
+    "bleacon": "^0.5.1",
+    "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
+    "redis": "^2.8.0",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
