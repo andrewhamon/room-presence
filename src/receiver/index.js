@@ -1,34 +1,28 @@
-/* @flow */
+import config from '../common/config'
+import bleacon from 'bleacon'
+// import noble from "noble"
+import {createClient} from 'redis'
+import {publish} from '../common/stream'
+import {BEACON_DISCOVERED} from '../common/actions'
 
-const fs = require("fs")
-const bleacon = require("bleacon")
-const config = require("./config")
-const redis = require("redis").createClient(config.redis_url)
+const redisClient = createClient(config.redisUrl)
 
-const streamKey = config.redis_prefix + config.redis_stream_key
+// const EXPECTED_MANUFACTURER_DATA_LENGTH = 25
+// const APPLE_COMPANY_IDENTIFIER = 0x004c // https://www.bluetooth.org/en-us/specification/assigned-numbers/company-identifiers
+// const IBEACON_TYPE = 0x02
+// const EXPECTED_IBEACON_DATA_LENGTH = 0x15
 
-var lastIdSent = ""
+// const onBluetoothStateChange(state: "unknown" | "resetting" | "unsupported" | "unauthorized" | "poweredOff" | "poweredOn")
 
-function onBeaconDiscovered(beacon: {uuid: string, rssi: number, measuredPower: number, accuracy: number, proximity: "unknown" | "immediate" | "near" | "far"}){
-  redis.send_command("XADD",
-    [streamKey, "*",
-      "machine_id", config.machineId,
-      "beacon_uuid", beacon.uuid,
-      "beacon_rssi", beacon.rssi,
-      "beacon_meadured_power", beacon.measuredPower,
-      "beacon_accuracy", beacon.accuracy,
-      "beacon_proximity", beacon.proximity
-    ],
-    (err, reply) => {
-      if(err){
-        console.log(err)
-      } else {
-        lastIdSent = reply
-      }
-    }
-  )
-
-  console.log(lastIdSent)
+async function onBeaconDiscovered (beacon: {uuid: string, rssi: number, measuredPower: number, accuracy: number, proximity: "unknown" | "immediate" | "near" | "far"}) {
+  try {
+    await publish(redisClient, config.redisStreamKey, Object.assign(beacon, {
+      type: BEACON_DISCOVERED,
+      machineId: config.machineId
+    }))
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 bleacon.on('discover', onBeaconDiscovered)
