@@ -1,6 +1,6 @@
 import {BEACON_DISCOVERED, RECEIVER_PING} from '../common/actions'
 
-const mergeReceiversDiscovered = (oldReceiver = {}, action) => {
+function mergeReceiversDiscovered (oldReceiver = {}, action) {
   const newReceiver = {
     lastSeenAt: action.receivedAt
   }
@@ -8,7 +8,7 @@ const mergeReceiversDiscovered = (oldReceiver = {}, action) => {
   return Object.assign({}, oldReceiver, newReceiver)
 }
 
-const mergeReceiversPing = (oldReceiver = {}, action) => {
+function mergeReceiversPing (oldReceiver = {}, action) {
   const newReceiver = {
     lastSeenAt: action.receivedAt,
     name: action.name
@@ -17,7 +17,7 @@ const mergeReceiversPing = (oldReceiver = {}, action) => {
   return Object.assign({}, oldReceiver, newReceiver)
 }
 
-export const receiver = (previousState: Object = {}, action: Object) => {
+export function receiver (previousState: Object = {}, action: Object) {
   switch (action.type) {
     case BEACON_DISCOVERED:
       previousState[action.machineId] = mergeReceiversDiscovered(previousState[action.machineId], action)
@@ -30,7 +30,7 @@ export const receiver = (previousState: Object = {}, action: Object) => {
   }
 }
 
-const mergeBeacons = (oldBeacon = {}, action) => {
+function mergeBeacons (oldBeacon = {}, action) {
   const newBeacon = {
     measuredPower: action.measuredPower,
     lastSeenAt: action.receivedAt
@@ -39,10 +39,31 @@ const mergeBeacons = (oldBeacon = {}, action) => {
   return Object.assign({}, oldBeacon, newBeacon)
 }
 
-export const beacon = (previousState: Object = {}, action: Object) => {
+export function beacon (previousState: Object = {}, action: Object) {
   switch (action.type) {
     case BEACON_DISCOVERED:
       previousState[action.uuid] = mergeBeacons(previousState[action.uuid], action)
+      return previousState
+    default:
+      return previousState
+  }
+}
+
+const MAX_MEASUREMENT_TIME = 10000
+
+export function measurement (previousState: Object = [], action: Object) {
+  switch (action.type) {
+    case BEACON_DISCOVERED:
+      previousState.unshift({
+        beacon_id: action.uuid,
+        receiver_id: action.machineId,
+        rssi: action.rssi,
+        seenAt: action.receivedAt
+      })
+
+      while(previousState[previousState.length-1] && previousState[previousState.length-1].seenAt < (action.receivedAt - MAX_MEASUREMENT_TIME)){
+        previousState.pop()
+      }
       return previousState
     default:
       return previousState

@@ -3,11 +3,12 @@ import fs from 'fs'
 import mkdirp from 'mkdirp'
 import uuidv4 from 'uuid/v4'
 import minimist from 'minimist'
+import {hostname} from 'os'
 
 const argv = minimist(process.argv.slice(2))
 const home = process.env.HOME || process.cwd()
 
-const configDir = String(argv['c'] || argv['config'] || path.join(home, 'config/room-presence'))
+const configDir = String(argv['c'] || argv['config'] || path.join(home, '.config/room-presence'))
 
 mkdirp.sync(configDir)
 
@@ -21,11 +22,9 @@ try {
 const machineId = fs.readFileSync(path.join(configDir, 'machine-id'), 'utf8')
 
 const defaultConfig = {
-  name: 'Room Presence Receiver',
+  name: hostname(),
   redisUrl: 'redis://127.0.0.1:6379',
-  redisPrefix: '',
-  readBatchSize: 100,
-  readTimeout: 5000
+  redisPrefix: ''
 }
 
 function configFromFile () {
