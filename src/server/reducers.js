@@ -1,8 +1,17 @@
-import {BEACON_DISCOVERED} from '../common/actions'
+import {BEACON_DISCOVERED, RECEIVER_PING} from '../common/actions'
 
-const mergeReceivers = (oldReceiver = {}, action) => {
+const mergeReceiversDiscovered = (oldReceiver = {}, action) => {
   const newReceiver = {
-    lastSeenEvent: action.eventId
+    lastSeenAt: action.receivedAt
+  }
+
+  return Object.assign({}, oldReceiver, newReceiver)
+}
+
+const mergeReceiversPing = (oldReceiver = {}, action) => {
+  const newReceiver = {
+    lastSeenAt: action.receivedAt,
+    name: action.name
   }
 
   return Object.assign({}, oldReceiver, newReceiver)
@@ -11,7 +20,10 @@ const mergeReceivers = (oldReceiver = {}, action) => {
 export const receiver = (previousState: Object = {}, action: Object) => {
   switch (action.type) {
     case BEACON_DISCOVERED:
-      previousState[action.machineId] = mergeReceivers(previousState[action.machineId], action)
+      previousState[action.machineId] = mergeReceiversDiscovered(previousState[action.machineId], action)
+      return previousState
+    case RECEIVER_PING:
+      previousState[action.machineId] = mergeReceiversPing(previousState[action.machineId], action)
       return previousState
     default:
       return previousState
@@ -21,7 +33,7 @@ export const receiver = (previousState: Object = {}, action: Object) => {
 const mergeBeacons = (oldBeacon = {}, action) => {
   const newBeacon = {
     measuredPower: action.measuredPower,
-    lastSeenEvent: action.eventId
+    lastSeenAt: action.receivedAt
   }
 
   return Object.assign({}, oldBeacon, newBeacon)

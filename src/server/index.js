@@ -6,7 +6,7 @@ import redis from 'redis'
 
 const redisClient = redis.createClient(config.redisUrl)
 
-subscribe(redisClient, config.redisStreamKey, (event) => {
+subscribe(config.redischannel, (event) => {
   if (event.type) {
     store.dispatch(event)
   }

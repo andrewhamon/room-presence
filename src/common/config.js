@@ -40,7 +40,7 @@ function configFromFile () {
 const penultimateConfig = Object.assign({}, defaultConfig, configFromFile(), {machineId: machineId})
 
 const computedConfig = {
-  redisStreamKey: penultimateConfig.redisPrefix + 'roomPresenceStream'
+  redischannel: penultimateConfig.redisPrefix + 'roomPresenceStream'
 }
 
 const config = Object.assign({}, penultimateConfig, computedConfig)

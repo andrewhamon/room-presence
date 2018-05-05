@@ -1,11 +1,8 @@
 import config from '../common/config'
 import bleacon from 'bleacon'
 // import noble from "noble"
-import {createClient} from 'redis'
 import {publish} from '../common/stream'
-import {BEACON_DISCOVERED} from '../common/actions'
-
-const redisClient = createClient(config.redisUrl)
+import {BEACON_DISCOVERED, RECEIVER_PING} from '../common/actions'
 
 // const EXPECTED_MANUFACTURER_DATA_LENGTH = 25
 // const APPLE_COMPANY_IDENTIFIER = 0x004c // https://www.bluetooth.org/en-us/specification/assigned-numbers/company-identifiers
@@ -16,7 +13,7 @@ const redisClient = createClient(config.redisUrl)
 
 async function onBeaconDiscovered (beacon: {uuid: string, rssi: number, measuredPower: number, accuracy: number, proximity: "unknown" | "immediate" | "near" | "far"}) {
   try {
-    await publish(redisClient, config.redisStreamKey, Object.assign(beacon, {
+    await publish(config.redischannel, Object.assign(beacon, {
       type: BEACON_DISCOVERED,
       machineId: config.machineId
     }))
@@ -24,6 +21,14 @@ async function onBeaconDiscovered (beacon: {uuid: string, rssi: number, measured
     console.error(e)
   }
 }
+
+setInterval(() => {
+  publish(config.redischannel, {
+    type: RECEIVER_PING,
+    machineId: config.machineId,
+    name: config.name
+  })
+}, 10000)
 
 bleacon.on('discover', onBeaconDiscovered)
 
