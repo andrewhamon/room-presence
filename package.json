@@ -8,7 +8,7 @@
     "build": "babel src/ -d lib/",
     "prepublish": "yarn run build",
     "watch": "babel-watch src/index.js",
-    "format": "standard --fix"
+    "format": "prettier --write \"src/**/*.js\""
   },
   "author": "Andrew Hamon",
   "license": "MIT",
@@ -27,7 +27,7 @@
     "babel-eslint": "^8.2.3",
     "babel-preset-env": "^1.6.1",
     "babel-watch": "^2.0.7",
-    "standard": "^11.0.1"
+    "prettier": "^1.13.7"
   },
   "babel": {
     "presets": [
@@ -41,7 +41,8 @@
       ]
     ]
   },
-  "standard": {
-    "parser": "babel-eslint"
+  "prettier": {
+    "semi": false,
+    "trailingComma": "all"
   }
 }

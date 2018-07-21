@@ -1,10 +1,10 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux'
-import { receiver, beacon, measurement } from './reducers'
+import { createStore, combineReducers, applyMiddleware } from "redux"
+import { receiver, beacon, measurement } from "./reducers"
 
 const rootReducer = combineReducers({
   receiver,
   beacon,
-  measurement
+  measurement,
 })
 
 const rootMiddleware = applyMiddleware()

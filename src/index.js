@@ -1,15 +1,15 @@
-import minimist from 'minimist'
+import minimist from "minimist"
 const argv = minimist(process.argv.slice(2))
 
-const command = argv['_'][0]
+const command = argv["_"][0]
 
 switch (command) {
-  case 'server':
-    require('./server/index.js')
+  case "server":
+    require("./server/index.js")
     break
-  case 'receiver':
-    require('./receiver/index.js')
+  case "receiver":
+    require("./receiver/index.js")
     break
   default:
-    console.log('Please specify server or receiver')
+    console.log("Please specify server or receiver")
 }
