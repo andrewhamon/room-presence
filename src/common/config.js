@@ -8,7 +8,7 @@ import {hostname} from 'os'
 const argv = minimist(process.argv.slice(2))
 const home = process.env.HOME || process.cwd()
 
-const configDir = String(argv['c'] || argv['config'] || path.join(home, '.config/room-presence'))
+const configDir = argv['c'] || argv['config'] || path.join(home, '.config/room-presence')
 
 mkdirp.sync(configDir)
 

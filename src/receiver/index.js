@@ -11,9 +11,9 @@ import {BEACON_DISCOVERED, RECEIVER_PING} from '../common/actions'
 
 // const onBluetoothStateChange(state: "unknown" | "resetting" | "unsupported" | "unauthorized" | "poweredOff" | "poweredOn")
 
-async function onBeaconDiscovered (beacon: {uuid: string, rssi: number, measuredPower: number, accuracy: number, proximity: "unknown" | "immediate" | "near" | "far"}) {
+async function onBeaconDiscovered (beacon) {
   try {
-    await publish(config.redischannel, Object.assign(beacon, {
+    await publish(config.redischannel, Object.assign({}, beacon, {
       type: BEACON_DISCOVERED,
       machineId: config.machineId
     }))

@@ -17,7 +17,7 @@ function mergeReceiversPing (oldReceiver = {}, action) {
   return Object.assign({}, oldReceiver, newReceiver)
 }
 
-export function receiver (previousState: Object = {}, action: Object) {
+export function receiver (previousState = {}, action) {
   switch (action.type) {
     case BEACON_DISCOVERED:
       previousState[action.machineId] = mergeReceiversDiscovered(previousState[action.machineId], action)
@@ -39,7 +39,7 @@ function mergeBeacons (oldBeacon = {}, action) {
   return Object.assign({}, oldBeacon, newBeacon)
 }
 
-export function beacon (previousState: Object = {}, action: Object) {
+export function beacon (previousState = {}, action) {
   switch (action.type) {
     case BEACON_DISCOVERED:
       previousState[action.uuid] = mergeBeacons(previousState[action.uuid], action)
@@ -51,7 +51,7 @@ export function beacon (previousState: Object = {}, action: Object) {
 
 const MAX_MEASUREMENT_TIME = 10000
 
-export function measurement (previousState: Object = [], action: Object) {
+export function measurement (previousState = [], action) {
   switch (action.type) {
     case BEACON_DISCOVERED:
       previousState.unshift({
@@ -61,7 +61,7 @@ export function measurement (previousState: Object = [], action: Object) {
         seenAt: action.receivedAt
       })
 
-      while(previousState[previousState.length-1] && previousState[previousState.length-1].seenAt < (action.receivedAt - MAX_MEASUREMENT_TIME)){
+      while (previousState[previousState.length - 1] && previousState[previousState.length - 1].seenAt < (action.receivedAt - MAX_MEASUREMENT_TIME)) {
         previousState.pop()
       }
       return previousState

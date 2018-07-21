@@ -19,17 +19,14 @@
     "mkdirp": "^0.5.1",
     "redis": "^2.8.0",
     "redux": "^4.0.0",
-    "uuid": "^3.2.1"
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
     "babel-preset-env": "^1.6.1",
-    "babel-preset-flow": "^6.23.0",
     "babel-watch": "^2.0.7",
-    "eslint-plugin-flowtype": "^2.46.3",
-    "flow-bin": "^0.71.0",
     "standard": "^11.0.1"
   },
   "babel": {
@@ -41,14 +38,10 @@
             "node": "8"
           }
         }
-      ],
-      "flow"
+      ]
     ]
   },
   "standard": {
-    "parser": "babel-eslint",
-    "plugins": [
-      "flowtype"
-    ]
+    "parser": "babel-eslint"
   }
 }
