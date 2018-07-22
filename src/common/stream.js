@@ -36,7 +36,7 @@ export function subscribe(channel, callback) {
   subscriptions[channel] = subscriptions[channel] || []
   subscriptions[channel].push(callback)
 
-  redisSubClient.subscribe(channel, (err, reply) => {
+  redisSubClient.subscribe(channel, err => {
     if (err) {
       console.error("Error subscribing to ", channel)
       console.error(err)

@@ -10,5 +10,6 @@ subscribe(config.redischannel, event => {
 })
 
 store.subscribe(() => {
+  // eslint-disable-next-line no-console
   console.log(store.getState())
 })

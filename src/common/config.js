@@ -16,6 +16,7 @@ mkdirp.sync(configDir)
 try {
   fs.statSync(path.join(configDir, "machine-id"))
 } catch (err) {
+  // eslint-disable-next-line no-console
   console.log(
     "Generating new machine id at " + path.join(configDir, "machine-id"),
   )
